@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Cheat Sheet</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+  select, button { padding: 8px; margin: 5px 0; font-size: 16px; }
+  #response { margin-top: 20px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.2);}
+</style>
+</head>
+<body>
+<h2>Agent Cheat Sheet</h2>
+
+<label for="brand">Выберите бренд:</label><br>
+<select id="brand">
+  <option value="">--Выберите--</option>
+  <option value="Vuse UK">Vuse UK</option>
+  <option value="Velo">Velo</option>
+  <option value="Glo">Glo</option>
+</select><br>
+
+<label for="issue">Выберите проблему:</label><br>
+<select id="issue">
+  <option value="">--Выберите--</option>
+  <option value="Lost order">Lost order</option>
+  <option value="Device not working">Device not working</option>
+  <option value="Damaged item">Damaged item</option>
+</select><br>
+
+<button onclick="showResponse()">Показать шаги</button>
+
+<div id="response">Здесь появятся шаги...</div>
+
+<script>
+const responses = {
+  "Vuse UK": {
+    "Lost order": "Попросите номер заказа и проверьте статус доставки в Zendesk. Если потерян, эскалируйте в логистику.",
+    "Device not working": "Спросите, загорается ли LED. Если нет — зарядите устройство. Если не помогает — заменить устройство."
+  },
+  "Velo": {
+    "Damaged item": "Запросите фото и предложите замену или возврат согласно политике."
+  },
+  "Glo": {
+    "Lost order": "Проверить номер заказа и дату доставки. Если потерян — создать тикет в поддержку."
+  }
+};
+
+function showResponse() {
+  const brand = document.getElementById("brand").value;
+  const issue = document.getElementById("issue").value;
+  const responseDiv = document.getElementById("response");
+
+  if(responses[brand] && responses[brand][issue]) {
+    responseDiv.textContent = responses[brand][issue];
+  } else {
+    responseDiv.textContent = "Пожалуйста, выберите бренд и проблему для получения инструкции.";
+  }
+}
+</script>
+
+</body>
+</html>
