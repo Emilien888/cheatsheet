@@ -12,9 +12,6 @@
   .dimmed { opacity: 0.3; filter: blur(1px); }
   .view-active { background-color: #2563eb; color: white; }
   .tag { display: inline-block; margin-right: 0.25rem; margin-bottom:0.25rem; padding:0.25rem 0.5rem; border-radius:0.25rem; font-size:0.75rem; font-weight:500; color:white; }
-  .tag-blue { background-color:#2563eb; }
-  .tag-green { background-color:#16a34a; }
-  .tag-purple { background-color:#7c3aed; }
   .tip { background:#fef3c7; border-left:4px solid #fbbf24; padding:0.25rem 0.5rem; border-radius:0.25rem; font-size:0.875rem; margin-top:0.5rem; }
 
   /* Overlay */
@@ -72,6 +69,8 @@
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+
 const articles = [
   {
     brand: "Vuse",
@@ -129,12 +128,22 @@ const renderArticles = (results = articles) => {
   results.forEach(a => {
     const card = document.createElement("div");
     card.className = "card p-4 rounded-lg border bg-white hover:shadow-lg transition-all";
-    // Add tags
-    const tagHTML = a.tags.map(t => `<span class="tag ${t==="Urgent"?"tag-red":t==="Tech"?"tag-green":"tag-blue"}">${t}</span>`).join(" ");
-    card.innerHTML = `<h2 class="font-semibold text-lg mb-2">${a.title}</h2>
-                      <p class="text-gray-700 truncate">${a.content}</p>
-                      <div class="mt-2">${tagHTML}</div>
-                      ${a.tip ? `<div class="tip">💡 ${a.tip}</div>` : ''}`;
+
+    // Tags HTML
+    const tagHTML = a.tags.map(t => {
+      let colorClass = "bg-blue-500";
+      if(t==="Urgent") colorClass = "bg-red-500";
+      else if(t==="Tech") colorClass = "bg-green-500";
+      return `<span class="tag ${colorClass}">${t}</span>`;
+    }).join(" ");
+
+    card.innerHTML = `
+      <h2 class="font-semibold text-lg mb-2">${a.title}</h2>
+      <p class="text-gray-700 truncate">${a.content}</p>
+      <div class="mt-2">${tagHTML}</div>
+      ${a.tip ? `<div class="tip">💡 ${a.tip}</div>` : ''}
+    `;
+
     card.addEventListener("click", () => openOverlay(a));
     articlesContainer.appendChild(card);
   });
@@ -156,11 +165,19 @@ const addHoverSpotlight = () => {
 };
 
 const openOverlay = (article) => {
-  const tagHTML = article.tags.map(t => `<span class="tag ${t==="Urgent"?"tag-red":t==="Tech"?"tag-green":"tag-blue"}">${t}</span>`).join(" ");
-  overlayContentDiv.innerHTML = `<h2 class="text-xl font-bold mb-4">${article.title}</h2>
-                                 <div class="mb-2">${tagHTML}</div>
-                                 <p class="text-gray-700 mb-2">${article.content}</p>
-                                 ${article.tip ? `<div class="tip">💡 ${article.tip}</div>` : ''}`;
+  const tagHTML = article.tags.map(t => {
+    let colorClass = "bg-blue-500";
+    if(t==="Urgent") colorClass = "bg-red-500";
+    else if(t==="Tech") colorClass = "bg-green-500";
+    return `<span class="tag ${colorClass}">${t}</span>`;
+  }).join(" ");
+
+  overlayContentDiv.innerHTML = `
+    <h2 class="text-xl font-bold mb-4">${article.title}</h2>
+    <div class="mb-2">${tagHTML}</div>
+    <p class="text-gray-700 mb-2">${article.content}</p>
+    ${article.tip ? `<div class="tip">💡 ${article.tip}</div>` : ''}
+  `;
   overlay.classList.add("show");
 };
 
@@ -183,6 +200,8 @@ detailBtn.addEventListener("click", () => setView("detail"));
 
 // Initial
 setView("board");
+
+});
 </script>
 </body>
 </html>
